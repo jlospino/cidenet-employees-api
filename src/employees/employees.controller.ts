@@ -5,7 +5,6 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { CountriesService } from 'src/countries/countries.service';
 import { ApiTags } from '@nestjs/swagger';
 import { MongoIdPipe } from 'src/common/mongo-id/mongo-id.pipe';
-import * as moment from 'moment-timezone';
 
 @Controller('employees')
 @ApiTags('Employees')
@@ -53,7 +52,7 @@ export class EmployeesController {
   @Patch(':id')
   async update(@Param('id', MongoIdPipe) id: string, @Body() updateEmployeeDto: UpdateEmployeeDto) {
     let empleadoBody = {};
-    let currentDate = moment().tz('America/Bogota');
+    let currentDate = new Date();
     //Find One
     const employee = await this.findOne(id);
 
