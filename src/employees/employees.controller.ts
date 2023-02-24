@@ -5,6 +5,7 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { CountriesService } from 'src/countries/countries.service';
 import { ApiTags } from '@nestjs/swagger';
 import { MongoIdPipe } from 'src/common/mongo-id/mongo-id.pipe';
+import { Country } from 'src/countries/schemas/country.schema';
 
 @Controller('employees')
 @ApiTags('Employees')
@@ -56,9 +57,12 @@ export class EmployeesController {
     //Find One
     const employee = await this.findOne(id);
 
+    const countryEmployee = await this.countriesService.findOne(updateEmployeeDto.country);
+
     //Check if employee information changed
     if (employee.firstName !== updateEmployeeDto.firstName
       || employee.lastName !== updateEmployeeDto.lastName
+      || employee.country.name !== countryEmployee.name
     ) {
       const email = await this.constructEmail(updateEmployeeDto)
       empleadoBody = {...updateEmployeeDto, email, updated_at: currentDate};

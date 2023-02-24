@@ -47,6 +47,11 @@ export class EmployeesService {
   }
 
   async update(id: string, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
+    const { documentNumber, documentType } = updateEmployeeDto;
+    const employeeById = await this.findOne(id);
+    const employee = await this.findByDocument(documentNumber, documentType);
+    if( employee && documentNumber !== employeeById.documentNumber) throw new BadRequestException(`Ya existe un empleado con el documento: ${ documentNumber }`);
+    
     return this.employeeModel.findOneAndUpdate({ _id: id }, updateEmployeeDto);
   }
 
